@@ -51,3 +51,13 @@ def solution(A):
     if total_pairs > 10**9:
         return -1
     return total_pairs
+
+
+if __name__ == "__main__":
+    assert solution([0]) == 0
+    assert solution([1]) == 0
+    assert solution([0, 0]) == 0
+    assert solution([0, 1]) == 1
+    assert solution([1, 0]) == 0
+    assert solution([0, 1, 1]) == 2
+    assert solution([0, 1, 0, 1, 1]) == 5
