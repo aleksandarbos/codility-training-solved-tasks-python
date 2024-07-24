@@ -89,3 +89,9 @@ def solution(A):
 
 if __name__ == "__main__":
     assert solution([5, 1, 3]) == 1
+    assert solution([0, 0]) == 0
+    assert solution([0, -5, 0]) == 0
+    assert solution([0, 0, -5]) == 1
+    assert solution([5, 1, 1, 1]) == 1
+    assert solution([-5, -5, -5]) == 0
+    assert solution([5, 5, 5, -1, -1]) == 3
