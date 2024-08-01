@@ -35,6 +35,10 @@ def get_leader_candidate_via_dict(A):
 
 
 def get_leader_candidate(A):
+    """
+    optimized function which simulates stack, but keeps only size and last val
+    since all stack values are going to be ending up being of same value (if any)
+    """
     N = len(A)
 
     leader_candidate = -1
