@@ -31,7 +31,7 @@ def solution(N):
         return 2 * (1 + 1)
 
     min_perimeter = float('inf')
-    while i * i < N:  # O(sqrt(N))
+    while i * i <= N:  # O(sqrt(N))
         if N % i == 0:
             A = N // i  # divisor
             B = i  # and it's symmetric pair
@@ -43,6 +43,7 @@ def solution(N):
 
 
 if __name__ == "__main__":
+    assert solution(36) == 24
     assert solution(30) == 22
     assert solution(1) == 4
     assert solution(2) == 6
