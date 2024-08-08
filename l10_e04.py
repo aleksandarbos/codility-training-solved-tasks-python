@@ -61,50 +61,74 @@
 #     A[11] = 2
 # the function should return 3, as explained above.
 
+
+def is_prime(num):  # O(sqrt(num))
+    i = 2
+    while i*i <= num:
+        if num % i == 0:
+            return False
+        i += 1
+    return True
+
+
+def divisors(N):  # O(sqrt(num))
+    result = []
+    for i in range(1, int(N**0.5) + 1):
+        if N % i == 0:
+            result.append(i)
+            if i != N // i:
+                result.append(N // i)
+    return result
+
+
 # time complexity: O(n)
 # space complexity: O(n)
 def solution(A):
     N = len(A)
-    peaks_sum_prefix = [0] * (N+1)
-
     if N < 3:
         return 0
 
+    peaks_sum_prefix = [0] * (N+1)
     s = 0
     for i in range(1, N+1):
         peaks_sum_prefix[i] += s
-        if i < N and A[i-1] < A[i] > A[i+1]:
+        if i < N and A[i-1] < A[i] > A[min(i+1, N-1)]:
             s += 1
 
+    max_div_cnt = 0
     peaks_cnt = peaks_sum_prefix[-1]
     if peaks_cnt == 0:
         return 0
-    elif peaks_cnt == 1:
+    elif is_prime(N) and peaks_cnt > 0:  # O(sqrt(N))
         return 1
-
-    max_divs = int(N**0.5 + 1)
-    i = 0
-    max_blocks = 0
-    for k in range(1, max_divs+1):  # O(sqrt(N))
-        cnt = 0
-        has_peaks = False
-        while i*k+k+1 <= len(peaks_sum_prefix):
-            end_idx, start_idx = i*k+k, i*k+1
-            if peaks_sum_prefix[end_idx] - peaks_sum_prefix[start_idx] == 0:
-                break
-            cnt += 1
-            i += 1
+    else:
+        divs = divisors(N)
+        for k in divs:  # O(sqrt(N))
+            j = 0
             has_peaks = True
-        if has_peaks:
-            max_blocks = max(max_blocks, cnt)
+            while j*k+k < len(peaks_sum_prefix):
+                start_idx, end_idx = j*k+1, j*k+k
+                if peaks_sum_prefix[end_idx] - peaks_sum_prefix[start_idx] == 0:
+                    has_peaks = False
+                    break
+                j += 1
+            if has_peaks:
+                max_div_cnt = max(max_div_cnt, j)
 
-    return max_blocks
+    return max_div_cnt
 
 
 if __name__ == "__main__":
-    assert solution([1, 2, 1, 2, 1, 1, 2, 2]) == 2
-    assert solution([1, 2, 2, 4, 3, 5, 6, 4, 2]) == 2
+    assert solution([1, 2, 1, 2, 1, 2, 1, 2, 1]) == 3
+    assert solution([1, 3, 2, 4]) == 1
+    assert solution([1, 2, 2, 4, 3, 5, 6, 4, 2]) == 1
+    assert solution([1, 1, 1, 1, 1]) == 0
+    assert solution([1, 3, 1, 3, 1, 3, 1]) == 1
     assert solution([1, 2, 3, 4, 3, 4, 1, 2, 3, 4, 6, 2]) == 3
+    assert solution([4, 4, 6, 1, 2, 3, 4]) == 1
+    assert solution([4, 4, 4, 1, 2, 3, 4]) == 0
+    assert solution([1, 2, 3, 4, 4, 4, 5, 6, 7]) == 0
+    assert solution([1, 2, 1, 2, 1, 1, 2, 2]) == 1
     assert solution([1, 2, 1, 2, 2]) == 1
     assert solution([1]) == 0
     assert solution([1, 2]) == 0
