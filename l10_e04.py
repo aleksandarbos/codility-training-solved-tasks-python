@@ -134,3 +134,7 @@ if __name__ == "__main__":
     assert solution([1, 2]) == 0
     assert solution([1, 2, 1]) == 1
     assert solution([1, 1, 2, 1, 1, 2, 1, 2, 1]) == 3
+    assert solution([1, 5, 3, 5, 3, 5, 3, 5, 3, 2, 6,
+                    2, 4, 2, 6, 2, 8, 3, 5, 3, 1]) == 3
+    assert solution([1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4,
+                    1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1]) == 1
