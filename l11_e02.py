@@ -55,29 +55,59 @@ def prime_f(n):
     return F
 
 
-def factorization(n, F):  # O(log(n))
-    prime_factors = []
-    while F[n] > 0:
-        prime_factors.append(F[n])
-        n = n // F[n]
-    prime_factors.append(n)
-    return prime_factors
+# def factorization(n, F):  # O(log(n))
+#     prime_factors = []
+#     while F[n] > 0:
+#         prime_factors.append(F[n])
+#         n = n // F[n]
+#     prime_factors.append(n)
+#     return prime_factors
 
 
-def solution(N, P, Q):
+# def solution(N, P, Q): # O(n*log(n))
+#     F = prime_f(N)
+#     semiprimes = [0] * (N+1)
+#     M = len(P)  # same as len(Q)
+#     result = []
+
+#     for i in range(4, N+1):  # first semiprime is at 4
+#         factors = factorization(i, F)
+#         if len(factors) == 2:
+#             semiprimes[i] = 1
+
+#     for k in range(M):
+#         p, q = P[k], Q[k]
+#         result.append(sum(semiprimes[p:q+1]))
+
+#     return result
+
+
+def is_semiprime(n, F):  # each semiprime num has exactly 2 prime factors
+    if F[n] == 0:
+        return False
+    n = n // F[n]
+    if F[n] != 0:
+        return False
+    return True
+
+
+def solution(N, P, Q):  # optimized solution
     F = prime_f(N)
-    semiprimes = [0] * (N+1)
     M = len(P)  # same as len(Q)
+    cnt_array = [0] * (N+1)
+    semiprimes_cnt = 0
     result = []
 
     for i in range(4, N+1):  # first semiprime is at 4
-        factors = factorization(i, F)
-        if len(factors) == 2:
-            semiprimes[i] = 1
+        if is_semiprime(i, F):
+            cnt_array[i] += semiprimes_cnt + 1
+            semiprimes_cnt += 1
+        else:
+            cnt_array[i] = semiprimes_cnt
 
     for k in range(M):
         p, q = P[k], Q[k]
-        result.append(sum(semiprimes[p:q+1]))
+        result.append(cnt_array[q]-cnt_array[p-1])
 
     return result
 
