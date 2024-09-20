@@ -1,5 +1,3 @@
-
-
 # A prime is a positive integer X that has exactly two distinct divisors: 1 and X. The first few prime integers are 2, 3, 5, 7, 11 and 13.
 
 # A prime D is called a prime divisor of a positive integer P if there exists a positive integer K such that D * K = P. For example, 2 and 5 are prime divisors of 20.
@@ -31,19 +29,31 @@
 #         each element of arrays A and B is an integer within the range [1..2,147,483,647].
 
 
-def get_primes(n):
-    result = set()
+def sieve(n):
+    primes = [True] * (n+1)
+    primes[0] = primes[1] = False
 
-    k = 2
-    while k*k <= n:  # calculate Trial division primes
-        if n % k == 0:
-            result.add(k)
-        k += 1
+    i = 2
+    while i*i <= n:
+        if primes[i]:
+            k = i*i
+            while k <= n:
+                primes[k] = False
+                k += i
+        i += 1
+    return primes
+
+
+def get_prime_factors(n):
+    result = set()
+    primes = sieve(int(n**0.5))  # get first x primes up to sqrt(n)
 
     j = n
-    for prime_factor in result:  # calculate cofactor
-        while j % prime_factor == 0:
-            j //= prime_factor
+    for num, is_prime in enumerate(primes):  # calculate cofactor
+        if num > 1:
+            while j % num == 0 and is_prime:
+                j //= num
+                result.add(num)
     if j > 1:
         result.add(j)
     return result
@@ -58,12 +68,12 @@ def solution(A, B):
         a, b = A[i], B[i]
 
         if not a in prime_divisors:
-            prime_divisors[a] = get_primes(a)
+            prime_divisors[a] = get_prime_factors(a)
 
         if not b in prime_divisors:
-            prime_divisors[b] = get_primes(b)
+            prime_divisors[b] = get_prime_factors(b)
 
-        if prime_divisors[a] and (prime_divisors[a] == prime_divisors[b]):
+        if prime_divisors[a] == prime_divisors[b]:
             result += 1
 
     return result
@@ -71,6 +81,7 @@ def solution(A, B):
 
 if __name__ == "__main__":
     assert solution([15, 10, 3], [75, 30, 5]) == 1
-    assert solution([1], [1]) == 0
+    assert solution([1], [1]) == 1
     assert solution([1, 75], [5, 15]) == 1
     assert solution([2147483647], [2147483646]) == 0
+    assert solution([6059, 551], [442307, 303601]) == 2
