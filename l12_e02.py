@@ -49,12 +49,12 @@ def get_prime_factors(n):
     primes = sieve(int(n**0.5))  # get first x primes up to sqrt(n)
 
     j = n
-    for num, is_prime in enumerate(primes):  # calculate cofactor
+    for num, is_prime in enumerate(primes):  # calculate factors
         if num > 1:
             while j % num == 0 and is_prime:
                 j //= num
                 result.add(num)
-    if j > 1:
+    if j > 1:  # if there is remaining cofactor add it
         result.add(j)
     return result
 
